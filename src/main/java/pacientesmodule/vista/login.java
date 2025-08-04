@@ -160,7 +160,7 @@ try (PreparedStatement stmt = conn.prepareStatement(enfermeroQuery)) {
                 String cedula= rs.getString("cedula");
                 if (dbPassword != null && dbPassword.equals(contrasena)) {
                     JOptionPane.showMessageDialog(this, "Acceso concedido como paciente");
-                    informacion_paciente paciente = new informacion_paciente(Integer.parseInt(cedula));
+                    informacion_paciente paciente = new informacion_paciente(cedula);
                     paciente.setVisible(true);
                     this.dispose(); // Cerrar ventana de login
                     return;

@@ -23,7 +23,7 @@ import pacientesmodule.pacientesDAO.ConsultaPrevia;
  * @author USUARIO
  */
 public class informacion_paciente extends javax.swing.JFrame {
-    private int cedula;
+    private String cedula;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(informacion_paciente.class.getName());
 
     /**
@@ -35,7 +35,7 @@ public class informacion_paciente extends javax.swing.JFrame {
     }
     
 
-    public informacion_paciente(int cedula) {
+    public informacion_paciente(String cedula) {
         this.cedula = cedula;
         initComponents();
         this.setLocationRelativeTo(this);
