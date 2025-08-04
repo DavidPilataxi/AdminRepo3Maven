@@ -226,6 +226,9 @@ public class Medicos extends javax.swing.JPanel {
 
             psUpdate.executeUpdate();
 
+            // Sincronizar con la tabla Doctor
+            sincronizarConTablaDoctor(conn, cedula, nombre, apellido, correo, especialidadNombre);
+
             JOptionPane.showMessageDialog(this, "Médico actualizado exitosamente.");
             cargarDatosMedicos();
             limpiarCamposMedico();
@@ -300,11 +303,54 @@ public class Medicos extends javax.swing.JPanel {
 
             psInsert.executeUpdate();
 
+            // Sincronizar con la tabla Doctor
+            sincronizarConTablaDoctor(conn, cedula, nombre, apellido, correo, especialidadNombre);
+
             JOptionPane.showMessageDialog(this, "Médico guardado exitosamente.");
             cargarDatosMedicos();
             limpiarCamposMedico();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al guardar médico: " + ex.getMessage());
+        }
+    }
+
+    private void sincronizarConTablaDoctor(Connection conn, String cedula, String nombre, String apellido, String correo, String especialidad) {
+        try {
+            // Verificar si el médico ya existe en la tabla Doctor
+            PreparedStatement psCheck = conn.prepareStatement("SELECT COUNT(*) FROM Doctor WHERE cedula = ?");
+            psCheck.setString(1, cedula);
+            ResultSet rs = psCheck.executeQuery();
+            rs.next();
+            boolean existe = rs.getInt(1) > 0;
+            
+            if (existe) {
+                // Actualizar el médico existente
+                PreparedStatement psUpdate = conn.prepareStatement(
+                    "UPDATE Doctor SET nombres = ?, apellidos = ?, correo = ?, especialidad = ? WHERE cedula = ?");
+                psUpdate.setString(1, nombre);
+                psUpdate.setString(2, apellido);
+                psUpdate.setString(3, correo);
+                psUpdate.setString(4, especialidad);
+                psUpdate.setString(5, cedula);
+                psUpdate.executeUpdate();
+            } else {
+                // Insertar nuevo médico en la tabla Doctor
+                PreparedStatement psInsert = conn.prepareStatement(
+                    "INSERT INTO Doctor (cedula, nombres, apellidos, fecha_nacimiento, sexo, correo, contrasena_doctor, rol, especialidad) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                psInsert.setString(1, cedula);
+                psInsert.setString(2, nombre);
+                psInsert.setString(3, apellido);
+                psInsert.setDate(4, new Date(System.currentTimeMillis())); // Fecha por defecto
+                psInsert.setString(5, "No especificado"); // Sexo por defecto
+                psInsert.setString(6, correo);
+                psInsert.setString(7, "123456"); // Contraseña por defecto
+                psInsert.setString(8, "doctor");
+                psInsert.setString(9, especialidad);
+                psInsert.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al sincronizar con tabla Doctor: " + ex.getMessage());
         }
     }
 
@@ -693,7 +739,7 @@ public class Medicos extends javax.swing.JPanel {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardarMedico)
                     .addComponent(btnActualizarMedico)
@@ -780,6 +826,11 @@ public class Medicos extends javax.swing.JPanel {
                 PreparedStatement ps = conn.prepareStatement("DELETE FROM Medicos WHERE IdMedico = ?");
                 ps.setInt(1, idSeleccionado);
                 ps.executeUpdate();
+                
+                // También eliminar de la tabla Doctor
+                PreparedStatement psDoctor = conn.prepareStatement("DELETE FROM Doctor WHERE cedula = (SELECT Cedula FROM Medicos WHERE IdMedico = ?)");
+                psDoctor.setInt(1, idSeleccionado);
+                psDoctor.executeUpdate();
 
                 JOptionPane.showMessageDialog(this, "Médico eliminado exitosamente.");
                 cargarDatosMedicos();

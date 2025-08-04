@@ -1,5 +1,6 @@
 package adminmodule.vista;
 
+import citasmodule.Vistas.DiagnosticoTratamiento;
 import javax.swing.*;
 import java.awt.*;
 
@@ -39,6 +40,17 @@ public class DoctorWindow extends JFrame {
             new HomeWindow().setVisible(true);
             dispose();
         });
+
+        // Acción ingresar diagnóstico
+        btnIngresarDiagnostico.addActionListener(e -> {
+            new DiagnosticoTratamiento().setVisible(true);
+        });
+
+        // Acción ver historial de pacientes
+        btnHistorialPacientes.addActionListener(e -> {
+            new GestionPacientesWindow().setVisible(true);
+        });
+
     }
 
     public static void main(String[] args) {

@@ -32,6 +32,10 @@ public class PacienteWindow extends JFrame {
         panelBotones.add(btnRegistrarMedico);
         panelBotones.add(btnVerMedicos);
         panelBotones.add(btnVerPacientes);
+        // Acción ver historial de pacientes
+        btnVerPacientes.addActionListener(e -> {
+            new GestionPacientesWindow().setVisible(true);
+        });
         panelBotones.add(btnCerrarSesion);
 
         add(panelBotones, BorderLayout.CENTER);
@@ -40,5 +44,15 @@ public class PacienteWindow extends JFrame {
         btnCerrarSesion.addActionListener(e -> {
             new HomeWindow().setVisible(true);
             dispose();
+        });
+
+        // Acción registrar médico
+        btnRegistrarMedico.addActionListener(e -> {
+            new medicosmodule.vistas.Medicos().setVisible(true);
+        });
+
+        // Acción ver lista de médicos
+        btnVerMedicos.addActionListener(e -> {
+            new medicosmodule.vistas.Medicos().setVisible(true);
         });
     }}

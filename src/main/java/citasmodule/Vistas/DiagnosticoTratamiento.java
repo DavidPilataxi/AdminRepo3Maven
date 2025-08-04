@@ -43,6 +43,137 @@ public class DiagnosticoTratamiento extends javax.swing.JFrame {
     }
 
     /**
+     * Carga los datos de la cita, diagnóstico, medicamentos y tratamientos relacionados
+     * en la interfaz gráfica, dado un idCita y la cédula del paciente.
+     */
+    public void cargarDatosCita(int idCita, String cedulaPaciente) {
+        this.idCita = idCita;
+        this.cedulaPaciente = cedulaPaciente;
+
+        // Actualizar campos básicos
+        jTCita.setText(String.valueOf(idCita));
+        jTCedula.setText(cedulaPaciente);
+        jTNombre.setText(obtenerNombrePaciente(cedulaPaciente));
+
+        // Cargar diagnóstico
+        cargarDiagnostico(idCita);
+
+        // Cargar medicamentos asignados
+        cargarMedicamentosAsignados(idCita);
+
+        // Cargar tratamientos
+        cargarTratamientos(idCita);
+    }
+
+    private void cargarDiagnostico(int idCita) {
+        ConexionBD conexion = new ConexionBD();
+        Connection conn = conexion.establecerConexion();
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this, "Error de conexión al cargar diagnóstico.");
+            return;
+        }
+
+        try {
+            String sql = "SELECT id_diagnostico, diagnostico, motivoConsulta FROM Diagnóstico WHERE id_cita = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, idCita);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                jT_idiagnos.setText(String.valueOf(rs.getInt("id_diagnostico")));
+                txtDescripcionDiagnostico.setText(rs.getString("diagnostico"));
+                jTConsulta.setText(rs.getString("motivoConsulta"));
+            } else {
+                jT_idiagnos.setText("");
+                txtDescripcionDiagnostico.setText("");
+                jTConsulta.setText("");
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar diagnóstico: " + ex.getMessage());
+        } finally {
+            conexion.cerrarConexion(conn);
+        }
+    }
+
+    private void cargarMedicamentosAsignados(int idCita) {
+        ConexionBD conexion = new ConexionBD();
+        Connection conn = conexion.establecerConexion();
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this, "Error de conexión al cargar medicamentos.");
+            return;
+        }
+
+        try {
+            String sql = "SELECT M.nombre, P.dosis, P.frecuencia FROM Medicamento M " +
+                         "JOIN Prescribir P ON M.id_medicamento = P.id_medicamento " +
+                         "JOIN Receta R ON P.id_receta = R.id_receta " +
+                         "WHERE R.id_cita = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, idCita);
+            ResultSet rs = pstmt.executeQuery();
+
+            modeloTablaMedicamentos.setRowCount(0);
+            while (rs.next()) {
+                modeloTablaMedicamentos.addRow(new Object[]{
+                    rs.getString("nombre"),
+                    rs.getString("dosis"),
+                    rs.getString("frecuencia")
+                });
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar medicamentos: " + ex.getMessage());
+        } finally {
+            conexion.cerrarConexion(conn);
+        }
+    }
+
+    private void cargarTratamientos(int idCita) {
+        ConexionBD conexion = new ConexionBD();
+        Connection conn = conexion.establecerConexion();
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this, "Error de conexión al cargar tratamientos.");
+            return;
+        }
+
+        try {
+            String sql = "SELECT id_tratamiento, objetivo, descripcion, tiempo_estimado, resultadosEsperados, id_internacion " +
+                         "FROM Tratamiento WHERE id_receta IN (SELECT id_receta FROM Receta WHERE id_cita = ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, idCita);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                Id_tratamiento.setText(String.valueOf(rs.getInt("id_tratamiento")));
+                Objetivo.setText(rs.getString("objetivo"));
+                Descrip.setText(rs.getString("descripcion"));
+                estimado.setText(rs.getString("tiempo_estimado"));
+                Result.setText(rs.getString("resultadosEsperados"));
+                id_inter.setText(String.valueOf(rs.getInt("id_internacion")));
+            } else {
+                Id_tratamiento.setText("");
+                Objetivo.setText("");
+                Descrip.setText("");
+                estimado.setText("");
+                Result.setText("");
+                id_inter.setText("");
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar tratamientos: " + ex.getMessage());
+        } finally {
+            conexion.cerrarConexion(conn);
+        }
+    }
+
+    /**
      * Constructor por defecto (para pruebas sin un ID de cita real).
      */
 
@@ -991,6 +1122,7 @@ public class DiagnosticoTratamiento extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(DiagnosticoTratamiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         // Cámbiala por esta (usa un id_cita y cédula de paciente real de tu DB):

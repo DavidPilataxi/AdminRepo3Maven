@@ -1,5 +1,6 @@
 package citasmodule.Vistas;
 
+import citasmodule.Vistas.DiagnosticoTratamiento;
 import citasmodule.conexion.ConexionBD;
 import static java.lang.Integer.parseInt;
 import java.sql.Connection;
@@ -7,10 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.text.ParseException;
 import javax.swing.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -265,6 +269,13 @@ public class AgendarCita extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Por favor complete todos los campos: cédula, nombre, especialidad, médico y fecha.");
             return;
         }
+        
+        // Validaciones adicionales para médico y especialidad
+        if ("Seleccione una especialidad".equals(especialidad) || "Seleccione un médico".equals(medico) ||
+            "No hay médicos disponibles".equals(medico)) {
+            JOptionPane.showMessageDialog(this, "Por favor seleccione una especialidad y un médico válidos.");
+            return;
+        }
 
         int selectedRow = tablaHorarios.getSelectedRow();
         if (selectedRow == -1) {
@@ -317,22 +328,49 @@ public class AgendarCita extends javax.swing.JFrame {
         Connection conn = conexion.establecerConexion();
 
         try {
-            String sql = "SELECT nombres FROM Doctor WHERE especialidad = ?";
+            // Verificamos primero si hay médicos con esa especialidad
+            String sqlCount = "SELECT COUNT(*) AS total FROM Medicos M JOIN Especialidades E ON M.IdEspecialidad = E.IdEspecialidad WHERE E.Nombre = ?";
+            PreparedStatement pstmtCount = conn.prepareStatement(sqlCount);
+            pstmtCount.setString(1, especialidad);
+            ResultSet rsCount = pstmtCount.executeQuery();
+            int total = 0;
+            if (rsCount.next()) {
+                total = rsCount.getInt("total");
+            }
+            
+            if (total == 0) {
+                // Limpiamos el combo de médicos si no hay médicos con esa especialidad
+                DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+                model.addElement("No hay médicos disponibles");
+                cmbMedico.setModel(model);
+                return;
+            }
+
+            String sql = "SELECT CONCAT(M.Nombre, ' ', M.Apellido) AS nombreCompleto FROM Medicos M JOIN Especialidades E ON M.IdEspecialidad = E.IdEspecialidad WHERE E.Nombre = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, especialidad);
             ResultSet rs = pstmt.executeQuery();
 
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+            model.addElement("Seleccione un médico");
             while (rs.next()) {
-            model.addElement(rs.getString("nombres"));
-        }
+                String nombre = rs.getString("nombreCompleto");
+                if (nombre != null && !nombre.trim().isEmpty()) {
+                    model.addElement(nombre);
+                }
+            }
             cmbMedico.setModel(model);
+
+            // Si solo tiene la opción por defecto, mostramos mensaje
+            if (model.getSize() <= 1) {
+                JOptionPane.showMessageDialog(this, "No hay médicos disponibles para esta especialidad.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            }
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar médicos: " + ex.getMessage(), "Error de BD", JOptionPane.ERROR_MESSAGE);
             logger.log(Level.SEVERE, "Error al cargar médicos por especialidad", ex);
         } finally {
-        conexion.cerrarConexion(conn);
+            conexion.cerrarConexion(conn);
         }
     }
     
@@ -340,19 +378,41 @@ public class AgendarCita extends javax.swing.JFrame {
         ConexionBD conexion = new ConexionBD();
         Connection conn = conexion.establecerConexion();
         if (conn == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo establecer conexión con la base de datos.", "Error de Conexión", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         try {
-            String sql = "SELECT DISTINCT especialidad FROM Doctor";
+            // Primero verificamos si hay datos en la tabla Medicos
+            String sqlCount = "SELECT COUNT(*) AS total FROM Medicos";
+            PreparedStatement pstmtCount = conn.prepareStatement(sqlCount);
+            ResultSet rsCount = pstmtCount.executeQuery();
+            if (rsCount.next()) {
+                int total = rsCount.getInt("total");
+                System.out.println("Total de registros en tabla Medicos: " + total);
+                if (total == 0) {
+                    JOptionPane.showMessageDialog(this, "No hay médicos registrados en la base de datos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+            
+            String sql = "SELECT DISTINCT E.Nombre AS especialidad FROM Medicos M JOIN Especialidades E ON M.IdEspecialidad = E.IdEspecialidad";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+            model.addElement("Seleccione una especialidad"); // Opción por defecto
             while (rs.next()) {
-                model.addElement(rs.getString("especialidad"));
+                String especialidad = rs.getString("especialidad");
+                if (especialidad != null && !especialidad.trim().isEmpty()) {
+                    model.addElement(especialidad);
+                }
             }
             cmbEspecialidad.setModel(model);
+            
+            // Si no hay especialidades, mostramos un mensaje
+            if (model.getSize() <= 1) { // Solo tiene la opción por defecto
+                JOptionPane.showMessageDialog(this, "No hay especialidades disponibles. Registre médicos con especialidades.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            }
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar especialidades: " + ex.getMessage(), "Error de BD", JOptionPane.ERROR_MESSAGE);
@@ -368,13 +428,30 @@ public class AgendarCita extends javax.swing.JFrame {
         Connection conn = conexion.establecerConexion();
 
         try {
-            String sql = "SELECT cedula FROM Doctor WHERE nombres = ?";
+            // Verificamos primero si el médico existe
+            String sqlCount = "SELECT COUNT(*) AS total FROM Medicos WHERE CONCAT(Nombre, ' ', Apellido) = ?";
+            PreparedStatement pstmtCount = conn.prepareStatement(sqlCount);
+            pstmtCount.setString(1, nombreMedico);
+            ResultSet rsCount = pstmtCount.executeQuery();
+            int total = 0;
+            if (rsCount.next()) {
+                total = rsCount.getInt("total");
+            }
+            
+            if (total == 0) {
+                JOptionPane.showMessageDialog(this, "No se encontró el médico especificado en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+
+            String sql = "SELECT Cedula FROM Medicos WHERE CONCAT(Nombre, ' ', Apellido) = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, nombreMedico);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                cedula = rs.getString("cedula");
+                cedula = rs.getString("Cedula");
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró la cédula del médico especificado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (SQLException ex) {
@@ -387,55 +464,126 @@ public class AgendarCita extends javax.swing.JFrame {
         return cedula;
     }
 
-    
     private void buscarHorarios() {
+        ConexionBD conexion = new ConexionBD();
+        Connection conn = conexion.establecerConexion();
+
         String medico = (String) cmbMedico.getSelectedItem();
+        
+        // Validaciones iniciales
+        if (medico == null || "Seleccione un médico".equals(medico) || "No hay médicos disponibles".equals(medico)) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor seleccione un médico válido.", 
+                "Error de Selección", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        String cedulaMedico = obtenerCedulaPorNombreMedico(medico);
+        // id_doctor es nchar en la BD, no int
+        String id_doctor = cedulaMedico;
         java.util.Date fecha = dateChooser.getDate();
 
-        // 1. Validaciones iniciales
-        if (fecha == null || medico == null || medico.isEmpty()) { // Añadido check para medico.isEmpty()
-            JOptionPane.showMessageDialog(this, "Por favor seleccione un médico y una fecha válidos.", "Error de Selección", JOptionPane.WARNING_MESSAGE);
+        // Validaciones iniciales
+        if (fecha == null) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor seleccione una fecha válida.", 
+                "Error de Selección", 
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 2. Obtener el modelo de la tabla
-        // Necesitamos el DefaultTableModel de tu JTable llamada 'tablaHorarios'.
-        // Asegúrate de que tablaHorarios ya esté inicializada en initComponents() o en tu constructor.
-        javax.swing.table.DefaultTableModel modeloTabla = (javax.swing.table.DefaultTableModel) tablaHorarios.getModel();
-
-        // 3. Limpiar la tabla de datos anteriores
-        // Esto remueve todas las filas existentes en el modelo.
-        modeloTabla.setRowCount(0);
-
-        // 4. Simular horarios (8:00 AM a 5:00 PM)
-        String[] horas = {
-                "08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM",
-                "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"
-        };
-
-        // 5. Simular y añadir filas al modelo de la tabla
-        for (String hora : horas) {
-            boolean ocupado = Math.random() > 0.5; // Simulación aleatoria
-            String estado = ocupado ? "Ocupado" : "Libre";
-
-            // Se crea un array de objetos para representar la fila.
-            // La tabla tendrá dos columnas: Hora y Estado.
-            Object[] fila = {hora, estado}; 
-            modeloTabla.addRow(fila); // Añade la fila al modelo de la tabla.
+        if (id_doctor == null || id_doctor.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "No se encontró el ID del médico. Por favor verifique que el médico esté correctamente registrado.", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-        // 6. Asegurar la visibilidad y actualización de la tabla (si es necesario)
-        // Asumo que 'scrollTabla' es el JScrollPane que contiene 'tablaHorarios'.
-        // Si 'scrollTabla' está dentro de un panel que ya es visible, estas líneas podrían no ser estrictamente necesarias,
-        // pero no hacen daño si quieres asegurarte.
+        // Limpiar tabla
+        javax.swing.table.DefaultTableModel modeloTabla = 
+            (javax.swing.table.DefaultTableModel) tablaHorarios.getModel();
+        modeloTabla.setRowCount(0);
+
+        // Horarios disponibles (todos inician como libres)
+        String[] horas = {
+            "08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", 
+            "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"
+        };
+
+        // Convertir fecha a formato SQL
+        java.sql.Date sqlFecha = new java.sql.Date(fecha.getTime());
+
+        // Consultar horarios ocupados desde la base de datos
+        Set<String> horasOcupadas = new HashSet<>();
+        String consulta = "SELECT hora FROM Cita WHERE id_doctor = ? AND fecha = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(consulta)) {
+            stmt.setString(1, id_doctor); // Cambio a setString para nchar
+            stmt.setDate(2, sqlFecha);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Time horaTime = rs.getTime("hora");
+                if (horaTime != null) {
+                    // Convertir TIME de BD (HH:mm:ss) a formato 12 horas (HH:mm AM/PM)
+                    String horaFormato12 = convertirA12Horas(horaTime);
+                    horasOcupadas.add(horaFormato12);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, 
+                "Error al consultar la base de datos: " + ex.getMessage(), 
+                "Error SQL", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        } finally {
+            // Cerrar conexión
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        // Llenar tabla: Todos libres por defecto, ocupados solo si están en BD
+        for (String hora : horas) {
+            String estado = horasOcupadas.contains(hora) ? "Ocupado" : "Libre";
+            modeloTabla.addRow(new Object[]{hora, estado});
+        }
+
+        // Mostrar scroll pane y actualizar vista
         if (jScrollPane2 != null) {
             jScrollPane2.setVisible(true);
         }
+
+        revalidate();
+        repaint();
+    }
+
     
-        // Estos son para asegurar que la UI se redibuje correctamente.
-        // Solo son necesarios si has cambiado la visibilidad o tamaño del componente.
-        revalidate(); // Recalcula el layout de los componentes
-        repaint();    // Redibuja los componentes
+    /**
+    * Convierte java.sql.Time a formato de 12 horas (HH:mm AM/PM)
+    * Ejemplo: 09:00:00 -> 09:00 AM
+    */
+   private String convertirA12Horas(java.sql.Time time) {
+       try {
+           // Convertir Time a LocalTime
+           java.time.LocalTime localTime = time.toLocalTime();
+
+           // Formatear a 12 horas con AM/PM
+           java.time.format.DateTimeFormatter formatter = 
+               java.time.format.DateTimeFormatter.ofPattern("hh:mm a", java.util.Locale.ENGLISH);
+
+           return localTime.format(formatter);
+       } catch (Exception e) {
+           e.printStackTrace();
+           return null;
+       }
     }
     
     public boolean validarCedula(String cedula) {
@@ -491,6 +639,23 @@ public class AgendarCita extends javax.swing.JFrame {
         String nombreSeleccionado = (String) cmbMedico.getSelectedItem();
         String cedulaMedico = obtenerCedulaPorNombreMedico(nombreSeleccionado);
         int id_doctor = parseInt(cedulaMedico);
+
+        // Obtener un id_tipo válido desde la tabla Tipo
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT TOP 1 id_tipo FROM Tipo")) {
+            if (rs.next()) {
+                id_tipo = rs.getInt("id_tipo");
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró un tipo válido para la cita.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al obtener tipo de cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Sincronizar médico en tabla Doctor para evitar error FK
+        sincronizarMedicoEnDoctor(conn, cedulaMedico, nombreSeleccionado);
         
         int selectedRow = tablaHorarios.getSelectedRow();
         String hora = (String) tablaHorarios.getValueAt(selectedRow, 0);
@@ -527,6 +692,39 @@ public class AgendarCita extends javax.swing.JFrame {
             if (pstmtCita.executeUpdate() == 0) {
                 throw new SQLException("No se pudo insertar la cita");
             }
+        }
+    }
+
+    private void sincronizarMedicoEnDoctor(Connection conn, String cedulaMedico, String nombreCompleto) {
+        try {
+            // Verificar si el médico ya existe en la tabla Doctor
+            PreparedStatement psCheck = conn.prepareStatement("SELECT COUNT(*) FROM Doctor WHERE cedula = ?");
+            psCheck.setString(1, cedulaMedico);
+            ResultSet rs = psCheck.executeQuery();
+            rs.next();
+            boolean existe = rs.getInt(1) > 0;
+
+            if (!existe) {
+                // Insertar médico en tabla Doctor con datos mínimos para evitar error FK
+                String[] nombresApellidos = nombreCompleto.split(" ", 2);
+                String nombre = nombresApellidos.length > 0 ? nombresApellidos[0] : "";
+                String apellido = nombresApellidos.length > 1 ? nombresApellidos[1] : "";
+                PreparedStatement psInsert = conn.prepareStatement(
+                    "INSERT INTO Doctor (cedula, nombres, apellidos, fecha_nacimiento, sexo, correo, contrasena_doctor, rol, especialidad) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                psInsert.setString(1, cedulaMedico);
+                psInsert.setString(2, nombre);
+                psInsert.setString(3, apellido);
+                psInsert.setDate(4, new java.sql.Date(System.currentTimeMillis())); // Fecha por defecto
+                psInsert.setString(5, "N/A"); // Sexo por defecto (valor corto para evitar truncamiento)
+                psInsert.setString(6, ""); // Correo vacío
+                psInsert.setString(7, "123456"); // Contraseña por defecto
+                psInsert.setString(8, "doctor");
+                psInsert.setString(9, "General"); // Especialidad por defecto
+                psInsert.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al sincronizar médico en tabla Doctor: " + ex.getMessage());
         }
     }
     
@@ -567,6 +765,7 @@ public class AgendarCita extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AgendarCita.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
