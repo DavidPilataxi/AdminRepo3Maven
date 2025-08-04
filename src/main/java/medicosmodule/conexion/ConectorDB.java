@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class ConectorDB {
 
-   private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=HospitalDB;encrypt=true;trustServerCertificate=true;";
+   private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=polisalud;encrypt=true;trustServerCertificate=true;";
     private static final String USER = "sa";
     private static final String PASSWORD = "1234";
 
