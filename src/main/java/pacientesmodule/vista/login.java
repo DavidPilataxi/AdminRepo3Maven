@@ -6,8 +6,8 @@ package vista;
 
 import static java.time.Clock.system;
 import static java.time.InstantSource.system;
-import vista.informacion_doctor;
-import vista.informacion_paciente;
+import pacientesmodule.vista.informacion_doctor;
+import pacientesmodule.vista.informacion_paciente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import pacientesmodule.conexion.ConexionSQLServer;
+import pacientesmodule.vista.informacion_enfermero;
 /**
  *
  * @author USUARIO

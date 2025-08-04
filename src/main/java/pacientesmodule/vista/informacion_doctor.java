@@ -1,4 +1,4 @@
-package vista;
+package pacientesmodule.vista;
 
 import java.awt.Image;
 import java.text.ParseException;
@@ -8,9 +8,9 @@ import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import vista.resultados;
-import vista.evolucion;
-import vista.editar_paciente;
+import pacientesmodule.vista.resultados;
+import pacientesmodule.vista.evolucion;
+import pacientesmodule.vista.editar_paciente;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
