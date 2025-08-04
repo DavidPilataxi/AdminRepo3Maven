@@ -49,7 +49,7 @@ public class InternacionDAO {
                 
                 internaciones.add(internacion);
             }
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, 
                 "Error al obtener internaciones: " + e.getMessage(), 
                 "Error", 

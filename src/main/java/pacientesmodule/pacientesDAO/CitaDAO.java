@@ -64,12 +64,6 @@ public class CitaDAO {
                 "Error", 
                 JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null, 
-                "Error: Driver JDBC no encontrado", 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
         }
         System.out.println("*******************");
         System.out.println("Datos encontrados: " + datosPaciente); // Mensaje de depuración mejorado
@@ -142,12 +136,6 @@ public class CitaDAO {
             "Error", 
             JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-        JOptionPane.showMessageDialog(null, 
-            "Error: Driver JDBC no encontrado", 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
     }
     
     System.out.println("*******************");
@@ -187,12 +175,6 @@ public static List<ConsultaPrevia> obtenerConsultasPrevias(String cedulaPaciente
         JOptionPane.showMessageDialog(null, 
             "Error al consultar consultas previas: " + e.getMessage(),
             "Error de base de datos",
-            JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-        JOptionPane.showMessageDialog(null, 
-            "Error: Driver JDBC no encontrado",
-            "Error de configuración",
             JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
     }
@@ -278,7 +260,7 @@ public static Map<String, String> obtenerDatosContacto(String cedulaPaciente) {
             datosContacto.put("telefono", rs.getString("telefono"));
             
         }
-    } catch (SQLException | ClassNotFoundException e) {
+    } catch (SQLException e) {
         e.printStackTrace();
     }
     
@@ -327,12 +309,6 @@ public static Map<String, String> obtenerAnamnesis(String idPaciente) {
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(null, 
             "Error en la consulta SQL: " + e.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-        JOptionPane.showMessageDialog(null, 
-            "Error: Driver JDBC no encontrado", 
             "Error", 
             JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();

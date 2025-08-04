@@ -142,7 +142,7 @@ public class HomeWindow extends JFrame {
                         "Paciente",
                         rsPaciente.getString("alergias"),
                         rsPaciente.getString("oxigenacion"),
-                        rsPaciente.getString("id_antecedentes")
+                        rsPaciente.getString("id_antecedetes")
                     );
 
                     new PatientHomeWindow(paciente).setVisible(true);

@@ -14,16 +14,17 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexionSQLServer {
-    public static Connection conectar() throws SQLException, ClassNotFoundException {
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        String url = "jdbc:sqlserver://DESKTOP-LIQ0V6G\\SQLEXPRESS;"
-                   + "databaseName=polisalud;"
-                   + "encrypt=true;"
-                   + "trustServerCertificate=true;"
-                   + "loginTimeout=30";
-        String user = "login1";
-        String password = "P@ssw0rd";
-        return DriverManager.getConnection(url, user, password);
+    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=polisalud;encrypt=true;trustServerCertificate=true;";
+    private static final String USER = "sa";
+    private static final String PASSWORD = "1234";
+
+    public static Connection conectar() throws SQLException {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("Driver JDBC no encontrado: " + e.getMessage());
+        }
     }
 }
 

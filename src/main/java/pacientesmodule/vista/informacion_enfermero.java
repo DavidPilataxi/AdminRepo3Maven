@@ -151,7 +151,7 @@ public class informacion_enfermero extends javax.swing.JFrame {
             return false;
         }
         
-    } catch (SQLException | ClassNotFoundException e) {
+    } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, "Error al obtener datos de la cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
         return false;
@@ -189,7 +189,7 @@ public class informacion_enfermero extends javax.swing.JFrame {
             return filasAfectadas > 0;
                 
             
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error al crear nueva anamnesis: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
             return false;
@@ -239,7 +239,7 @@ public class informacion_enfermero extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Cambios guardados con éxito","Guardar",JOptionPane.INFORMATION_MESSAGE);
             return filasAfectadas > 0;
             
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error al actualizar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
             return false;
@@ -273,13 +273,6 @@ private int obtenerIdHistoriaClinica(int idCita) {
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(null, 
             "Error al obtener historia clínica: " + e.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-        return -1;
-    } catch (ClassNotFoundException e) {
-        JOptionPane.showMessageDialog(null, 
-            "Error: Driver JDBC no encontrado", 
             "Error", 
             JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();

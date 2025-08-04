@@ -1790,13 +1790,6 @@ private boolean actualizarCampoEnBD(String campo, Object valor) {
             JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
         return false;
-    } catch (ClassNotFoundException e) {
-        JOptionPane.showMessageDialog(this, 
-            "Error: Driver JDBC no encontrado", 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-        return false;
     }
 }
 private void configurarValidacionFecha() {
@@ -2008,7 +2001,7 @@ private boolean guardarCambiosContacto() {
                 }
             }
         }
-    } catch (SQLException | ClassNotFoundException e) {
+    } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, 
             "Error al guardar datos de contacto: " + e.getMessage(), 
             "Error de base de datos", 

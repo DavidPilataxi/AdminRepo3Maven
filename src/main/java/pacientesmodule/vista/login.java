@@ -197,12 +197,6 @@ try (PreparedStatement stmt = conn.prepareStatement(enfermeroQuery)) {
         this.jtfusuario.setText("");
         this.jpfcontrasena.setText("");
         
-    } catch (ClassNotFoundException e) {
-        JOptionPane.showMessageDialog(this, 
-            "Error: Driver JDBC no encontrado", 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, 
             "Error de conexión: " + e.getMessage(), 

@@ -42,12 +42,6 @@ public class AntecedentesDAO {
                 "Error de Base de Datos",
                 JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null,
-                "Error: Driver JDBC no encontrado",
-                "Error de Driver",
-                JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
         }
         System.out.println("Antecedenteeeeeeeesssssssssssssssssssss");
         System.out.println(antecedentes);
