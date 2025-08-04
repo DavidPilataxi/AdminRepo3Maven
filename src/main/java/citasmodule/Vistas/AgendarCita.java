@@ -317,7 +317,7 @@ public class AgendarCita extends javax.swing.JFrame {
         Connection conn = conexion.establecerConexion();
 
         try {
-            String sql = "SELECT nombres FROM Doctor WHERE especialidad = ?";
+            String sql = "SELECT nombres FROM Medicos WHERE especialidad = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, especialidad);
             ResultSet rs = pstmt.executeQuery();
