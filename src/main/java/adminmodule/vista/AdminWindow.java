@@ -42,9 +42,11 @@ public class AdminWindow extends JFrame {
 
         // Acción para abrir módulo médico
         btnModuloMedicos.addActionListener(e -> {
-            new Principal().setVisible(true);
-            // dispose();
-        });
+    new LoginAdminMedicoWindow().setVisible(true);
+    // Opcional: cerrar esta ventana si quieres
+    // dispose();
+});
+
 
         // Acción para cerrar sesión
         btnCerrarSesion.addActionListener(e -> {

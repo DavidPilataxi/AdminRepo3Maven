@@ -8,21 +8,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class RegistrarAdministradorWindow extends JFrame {
+public class RegistrarAdminMedicoWindow extends JFrame {
 
-    public RegistrarAdministradorWindow() {
-        setTitle("Registrar Nuevo Administrador");
-        setSize(400, 450);
+    public RegistrarAdminMedicoWindow() {
+        setTitle("Registrar Nuevo Administrador Médico");
+        setSize(400, 380);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
 
-        JLabel lblTitulo = new JLabel("Formulario de Registro de Administrador");
+        JLabel lblTitulo = new JLabel("Formulario Registro Administrador Médico");
         lblTitulo.setBounds(30, 20, 340, 30);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 14));
         add(lblTitulo);
 
-        // Campos
         JLabel lblCedula = new JLabel("Cédula:");
         lblCedula.setBounds(30, 70, 100, 25);
         add(lblCedula);
@@ -58,63 +57,43 @@ public class RegistrarAdministradorWindow extends JFrame {
         txtContrasena.setBounds(150, 230, 200, 25);
         add(txtContrasena);
 
-        JLabel lblFecha = new JLabel("Fecha Nac. (YYYY-MM-DD):");
-        lblFecha.setBounds(30, 270, 150, 25);
-        add(lblFecha);
-        JTextField txtFecha = new JTextField();
-        txtFecha.setBounds(190, 270, 160, 25);
-        add(txtFecha);
-
-        JLabel lblSexo = new JLabel("Sexo:");
-        lblSexo.setBounds(30, 310, 100, 25);
-        add(lblSexo);
-        JComboBox<String> comboSexo = new JComboBox<>(new String[]{"Masculino", "Femenino"});
-        comboSexo.setBounds(150, 310, 200, 25);
-        add(comboSexo);
-
         JButton btnRegistrar = new JButton("Registrar");
-        btnRegistrar.setBounds(150, 360, 120, 35);
+        btnRegistrar.setBounds(150, 280, 120, 35);
         add(btnRegistrar);
 
-        // Acción del botón
         btnRegistrar.addActionListener(e -> {
             String cedula = txtCedula.getText().trim();
             String nombres = txtNombres.getText().trim();
             String apellidos = txtApellidos.getText().trim();
             String correo = txtCorreo.getText().trim();
             String contrasena = new String(txtContrasena.getPassword()).trim();
-            String fechaNac = txtFecha.getText().trim();
-            String sexo = (String) comboSexo.getSelectedItem();
 
-            if (cedula.isEmpty() || nombres.isEmpty() || apellidos.isEmpty() ||
-                correo.isEmpty() || contrasena.isEmpty() || fechaNac.isEmpty() || sexo == null) {
-                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Validación", JOptionPane.WARNING_MESSAGE);
+            if (cedula.isEmpty() || nombres.isEmpty() || apellidos.isEmpty() || contrasena.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, completa todos los campos obligatorios.", "Validación", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             try (Connection conn = ConexionSQL.conectar()) {
-                String sql = "INSERT INTO Administrador (cedula, nombres, apellidos, correo, contrasena_admin, fecha_nacimiento, sexo) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO AdministradorMedico (cedula, nombres, apellidos, correo, contrasena_admin_medico) VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, cedula);
                 ps.setString(2, nombres);
                 ps.setString(3, apellidos);
-                ps.setString(4, correo);
+                ps.setString(4, correo.isEmpty() ? null : correo);
                 ps.setString(5, contrasena);
-                ps.setString(6, fechaNac);
-                ps.setString(7, sexo);
 
                 int filas = ps.executeUpdate();
                 if (filas > 0) {
-                    JOptionPane.showMessageDialog(this, "Administrador registrado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Administrador Médico registrado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo registrar el administrador.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No se pudo registrar el administrador médico.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
                 ps.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al registrar administrador:\n" + ex.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al registrar administrador médico:\n" + ex.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
             }
         });
     }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package medicosmodule.conexion;
 
 import java.sql.Connection;
@@ -10,9 +6,15 @@ import java.sql.SQLException;
 
 public class ConectorDB {
 
-   private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=polisalud;encrypt=true;trustServerCertificate=true;";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "1234";
+    // Cambié la URL para apuntar al servidor y instancia correcta
+    private static final String URL = "jdbc:sqlserver://DESKTOP-LIQ0V6G\\SQLEXPRESS;"
+            + "databaseName=polisalud;"
+            + "encrypt=true;"
+            + "trustServerCertificate=true;"
+            + "loginTimeout=30";
+
+    private static final String USER = "login1";
+    private static final String PASSWORD = "P@ssw0rd";
 
     public static Connection conectar() throws SQLException {
         try {
