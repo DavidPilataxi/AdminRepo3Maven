@@ -5,9 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexionSQL {
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=polisalud;encrypt=true;trustServerCertificate=true;";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "1234";
+    private static final String URL = "jdbc:sqlserver://DESKTOP-LIQ0V6G\\SQLEXPRESS;"
+            + "databaseName=polisalud;"
+            + "encrypt=true;"
+            + "trustServerCertificate=true;"
+            + "loginTimeout=30;";
+    
+    private static final String USER = "login1";
+    private static final String PASSWORD = "P@ssw0rd";
 
     public static Connection conectar() throws SQLException {
         try {

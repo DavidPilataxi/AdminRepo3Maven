@@ -2,7 +2,7 @@ package adminmodule.vista;
 
 import javax.swing.*;
 import java.awt.*;
-import medicosmodule.vistas.Principal; // Asegúrate que este es el nuevo paquete tras mover la clase
+import medicosmodule.vistas.Principal;
 
 public class AdminWindow extends JFrame {
 
@@ -21,33 +21,29 @@ public class AdminWindow extends JFrame {
 
         // Panel central con botones
         JPanel panelBotones = new JPanel();
-        panelBotones.setLayout(new GridLayout(4, 1, 10, 10));
+        panelBotones.setLayout(new GridLayout(3, 1, 10, 10)); // Solo 3 botones ahora
         panelBotones.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
+        JButton btnModuloAdministradores = new JButton("Módulo de Administradores");
         JButton btnModuloMedicos = new JButton("Módulo Médicos y Especialidades");
-        JButton btnVerMedicos = new JButton("Ver Lista de Médicos");
-        JButton btnVerPacientes = new JButton("Ver Lista de Pacientes");
         JButton btnCerrarSesion = new JButton("Cerrar Sesión");
-        JButton btnGestionarPacientes = new JButton("Gestionar Pacientes");
 
-        panelBotones.add(btnGestionarPacientes);
+        panelBotones.add(btnModuloAdministradores);
         panelBotones.add(btnModuloMedicos);
-        panelBotones.add(btnVerMedicos);
-        panelBotones.add(btnVerPacientes);
         panelBotones.add(btnCerrarSesion);
 
         add(panelBotones, BorderLayout.CENTER);
 
+        // Acción para abrir login de administrador
+        btnModuloAdministradores.addActionListener(e -> {
+            new LoginAdminWindow().setVisible(true);
+            // dispose(); // si quieres cerrar esta ventana al abrir el login
+        });
+
         // Acción para abrir módulo médico
         btnModuloMedicos.addActionListener(e -> {
             new Principal().setVisible(true);
-            // Si quieres cerrar AdminWindow cuando se abre el módulo:
             // dispose();
-        });
-
-        // Acción para gestionar pacientes
-        btnGestionarPacientes.addActionListener(e -> {
-            new GestionPacientesWindow().setVisible(true);
         });
 
         // Acción para cerrar sesión
