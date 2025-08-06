@@ -1,5 +1,6 @@
 package citasmodule.Vistas;
 
+import adminmodule.modelo.Paciente;
 import citasmodule.conexion.ConexionBD;
 import static java.lang.Integer.parseInt;
 import java.sql.Connection;
@@ -34,7 +35,7 @@ public class AgendarCita extends javax.swing.JFrame {
      */
     private static final Logger logger = Logger.getLogger(DiagnosticoTratamiento.class.getName());
     
-    public AgendarCita() {
+    public AgendarCita(Paciente pacienteActual) {
         initComponents();
         cargarEspecialidadesDisponibles(); 
         dateChooser.setMinSelectableDate(new Date());
@@ -894,7 +895,8 @@ public class AgendarCita extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AgendarCita().setVisible(true);
+                Paciente pacienteActual = null;
+                new AgendarCita(pacienteActual).setVisible(true);
             }
         });
     }

@@ -1,13 +1,13 @@
 package pacientesmodule.vista;
 
 import adminmodule.modelo.Paciente;
+import citasmodule.Vistas.AgendarCita; // Importar la ventana para agendar
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Logger;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-
+import pacientesmodule.vista.editar_paciente;
 public class PacienteHomeWindow extends JFrame {
 
     private static final Logger logger = Logger.getLogger(PacienteHomeWindow.class.getName());
@@ -56,14 +56,13 @@ public class PacienteHomeWindow extends JFrame {
 
         btnCerrarSesion = new JButton("Cerrar Sesión");
         btnCerrarSesion.setPreferredSize(new Dimension(200, 35));
-        btnCerrarSesion.setMaximumSize(new Dimension(200, 35)); // asegura tamaño consistente
-        btnCerrarSesion.setBackground(new Color(70, 130, 180)); // azul similar al de login
+        btnCerrarSesion.setMaximumSize(new Dimension(200, 35));
+        btnCerrarSesion.setBackground(new Color(70, 130, 180));
         btnCerrarSesion.setForeground(Color.BLACK);
         btnCerrarSesion.setFocusPainted(false);
         btnCerrarSesion.setFont(new Font("Arial", Font.BOLD, 14));
         btnCerrarSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Agregar componentes al panel principal
         mainPanel.add(lblBienvenida);
         mainPanel.add(Box.createRigidArea(new Dimension(0, 40)));
         mainPanel.add(btnEditarInformacion);
@@ -76,16 +75,24 @@ public class PacienteHomeWindow extends JFrame {
 
         add(mainPanel);
 
-        // Solo el botón de cerrar sesión tiene funcionalidad por ahora
+        // Acciones de los botones
         btnCerrarSesion.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                btnCerrarSesionActionPerformed(evt);
+                dispose();
+                new adminmodule.vista.HomeWindow().setVisible(true);
             }
         });
-    }
 
-    private void btnCerrarSesionActionPerformed(ActionEvent evt) {
-        this.dispose();
-        new adminmodule.vista.HomeWindow().setVisible(true);
+        btnAgendarCita.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                new AgendarCita(pacienteActual).setVisible(true);
+            }
+        });
+
+        btnEditarInformacion.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                new editar_paciente(pacienteActual).setVisible(true);
+            }
+        });
     }
 }

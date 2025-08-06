@@ -19,7 +19,7 @@ public class ConexionBD {
 
     // Parámetros para conectarte A TU SERVIDOR LOCAL que tiene el linked server
     String usuario = "sa";  // Tu usuario local
-    String contraseña = "123456789";  // Tu contraseña local actualizada
+    String contraseña = "1234";  // Tu contraseña local actualizada
     String bd = "master";  // Conectarte a master inicialmente (para usar linked server)
     String ip = "DESKTOP-2CFK9UD";  // Tu servidor local
     String puerto = "1433";  // Puerto de tu servidor

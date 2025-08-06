@@ -4,6 +4,7 @@
  */
 package pacientesmodule.vista;
 
+import adminmodule.modelo.Paciente;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +21,7 @@ public class editar_paciente extends javax.swing.JFrame {
     /**
      * Creates new form editar_paciente
      */
-    public editar_paciente() {
+    public editar_paciente(Paciente pacienteActual) {
         initComponents();
         this.setLocationRelativeTo(this);
     }
@@ -366,9 +367,10 @@ public class editar_paciente extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        Paciente pacienteActual = null;
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new editar_paciente().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new editar_paciente(pacienteActual).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
