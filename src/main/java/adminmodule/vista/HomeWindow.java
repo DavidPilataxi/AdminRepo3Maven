@@ -176,6 +176,21 @@ public class HomeWindow extends JFrame {
                 dispose();
             }
         });
+        
+        JLabel lblIrAdmin = new JLabel("¿Eres administrador? Ir a Módulos");
+lblIrAdmin.setBounds(150, 280, 250, 30);
+lblIrAdmin.setForeground(new Color(0, 102, 204));
+lblIrAdmin.setFont(new Font("Arial", Font.BOLD, 12));
+lblIrAdmin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+rightPanel.add(lblIrAdmin);
+
+lblIrAdmin.addMouseListener(new java.awt.event.MouseAdapter() {
+    public void mouseClicked(java.awt.event.MouseEvent evt) {
+        new AdminWindow().setVisible(true);  // <-- Cambia aquí si quieres abrir AdminWindow2 u otra ventana
+        dispose();
+    }
+});
+
 
         mainPanel.add(rightPanel);
     }
