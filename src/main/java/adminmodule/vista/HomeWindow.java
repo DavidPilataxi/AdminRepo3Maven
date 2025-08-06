@@ -2,7 +2,7 @@ package adminmodule.vista;
 
 import adminmodule.dao.ConexionSQL;
 import adminmodule.modelo.Paciente;
-import pacientesmodule.vista.PatientHomeWindow;
+import pacientesmodule.vista.PacienteHomeWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -129,6 +129,7 @@ public class HomeWindow extends JFrame {
         rightPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         // Event listeners
+        // Dentro del ActionListener btnLogin
         btnLogin.addActionListener(e -> {
             String cedula = txtCedula.getText().trim();
             String contrasena = new String(txtPassword.getPassword()).trim();
@@ -156,13 +157,16 @@ public class HomeWindow extends JFrame {
                         rsPaciente.getString("sexo"),
                         rsPaciente.getString("correo"),
                         rsPaciente.getString("contrasena_paciente"),
-                        "Paciente",
+                        "PACIENTE",
                         rsPaciente.getString("alergias"),
-                        rsPaciente.getString("oxigenacion"),
-                        rsPaciente.getString("id_antecedetes")
+                        String.valueOf(rsPaciente.getInt("id_antecedetes")),  // convertido a String
+                        rsPaciente.getString("estado_civil"),
+                        rsPaciente.getString("telefono"),
+                        rsPaciente.getString("tipo_sangre"),
+                        rsPaciente.getString("tipo_identificador")
                     );
 
-                    new PatientHomeWindow(paciente).setVisible(true);
+                    new PacienteHomeWindow(paciente).setVisible(true);
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Credenciales inválidas.", "Acceso denegado", JOptionPane.ERROR_MESSAGE);
@@ -175,6 +179,7 @@ public class HomeWindow extends JFrame {
                 JOptionPane.showMessageDialog(this, "Error al conectar a la base de datos:\n" + ex.getMessage(), "Error de conexión", JOptionPane.ERROR_MESSAGE);
             }
         });
+
 
         lblRegistrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

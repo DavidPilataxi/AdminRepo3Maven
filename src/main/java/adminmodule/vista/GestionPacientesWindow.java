@@ -1,4 +1,4 @@
-    package adminmodule.vista;
+package adminmodule.vista;
 
     import adminmodule.controlador.AdminController;
     import adminmodule.modelo.Paciente;
@@ -15,6 +15,7 @@
     import java.text.SimpleDateFormat;
     import java.util.Date;
     import java.util.List;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
     public class GestionPacientesWindow extends JFrame {
 
@@ -211,7 +212,6 @@
                     p.getSexo(),
                     p.getCorreo(),
                     p.getAlergias(),
-                    p.getOxigenacion(),
                     p.getIdAntecedentes()
                 });
             }
@@ -343,7 +343,7 @@
                 boolean exito = adminController.actualizarPaciente(
                     cedula, nombres, apellidos, fechaNacimiento,
                     sexo, correo, contrasena.isEmpty() ? null : contrasena,
-                    alergias, oxigenacion, idAntecedentes.isEmpty() ? null : idAntecedentes
+                    alergias, idAntecedentes.isEmpty() ? null : idAntecedentes
                 );
 
                 if (exito) {
@@ -407,4 +407,3 @@
             });
         }
     }
-    

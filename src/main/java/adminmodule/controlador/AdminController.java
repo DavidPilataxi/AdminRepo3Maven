@@ -77,9 +77,9 @@ public class AdminController {
 
     // Métodos mejorados para Pacientes
     public boolean actualizarPaciente(String cedula, String nombres, String apellidos,
-                                   Date fechaNacimiento, String sexo, String correo,
-                                   String contrasena, String alergias, 
-                                   String oxigenacion, String idAntecedentes) {
+                                  Date fechaNacimiento, String sexo, String correo,
+                                  String contrasena, String alergias,
+                                  String idAntecedentes) {
         try {
             Paciente pacienteExistente = pacienteDAO.obtenerPorCedula(cedula);
             if (pacienteExistente == null) {
@@ -102,7 +102,6 @@ public class AdminController {
             }
             
             pacienteExistente.setAlergias(alergias);
-            pacienteExistente.setOxigenacion(oxigenacion);
             
             // Manejo especial de antecedentes
             if (idAntecedentes != null && !idAntecedentes.isEmpty()) {

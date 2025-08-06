@@ -1,4 +1,3 @@
-
 package adminmodule.controlador;
 
 import adminmodule.dao.*;
@@ -35,19 +34,31 @@ public class AuthController {
     }
 
     public boolean registrarPaciente(String cedula, String nombres, String apellidos, 
-                                   Date fechaNacimiento, String sexo, String correo, 
-                                   String contrasena) {
+                               Date fechaNacimiento, String sexo, String correo, 
+                               String contrasena) {
         if (!CedulaEcuatoriana.validar(cedula)) return false;
         if (!Validaciones.validarNombresCompletos(nombres)) return false;
         if (!Validaciones.validarEmail(correo)) return false;
         if (pacienteDAO.existe(cedula)) return false;
 
         Paciente nuevoPaciente = new Paciente(
-            cedula, nombres, apellidos, fechaNacimiento,
-            sexo, correo, contrasena, "paciente",
-            null, null, null
+            cedula,
+            nombres,
+            apellidos,
+            fechaNacimiento,
+            sexo,
+            correo,
+            contrasena,
+            "PACIENTE",
+            null,  // alergias
+            null,  // idAntecedentes
+            null,  // estadoCivil
+            null,  // telefono
+            null,  // tipoSangre
+            null   // tipoIdentificador
         );
 
         return pacienteDAO.guardar(nuevoPaciente);
     }
+
 }

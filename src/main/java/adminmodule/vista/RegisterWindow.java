@@ -7,199 +7,186 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.Period;
 import com.toedter.calendar.JDateChooser;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public class RegisterWindow extends JFrame {
-    private JTextField cedulaField, nombresField, apellidosField, correoField;
+    private JTextField cedulaField, nombresField, apellidosField, correoField, usuarioPacienteField, alergiasField, telefonoField, sangreField, tipoIdentificadorField;
     private JPasswordField contrasenaField;
-    private JComboBox<String> sexoComboBox;
+    private JComboBox<String> sexoComboBox, estadoCivilComboBox;
     private JDateChooser fechaNacimientoChooser;
 
     public RegisterWindow() {
         setTitle("Registro de Paciente");
-        setSize(600, 500);
+        setSize(600, 650); // Ventana visible
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
 
-        JLabel lblTitulo = new JLabel("Registro de Paciente");
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+
+        // Título
+        JLabel lblTitulo = new JLabel("Registro de Paciente", SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
-        lblTitulo.setBounds(200, 10, 300, 30);
-        add(lblTitulo);
+        gbc.gridwidth = 2;
+        gbc.gridy = 0;
+        panel.add(lblTitulo, gbc);
+        gbc.gridwidth = 1;
 
-        addFormField("Cédula:", cedulaField = new JTextField(), 50);
-        addFormField("Nombres:", nombresField = new JTextField(), 90);
-        addFormField("Apellidos:", apellidosField = new JTextField(), 130);
+        int y = 1;
 
-        JLabel fechaLabel = new JLabel("Fecha Nacimiento:");
-        fechaLabel.setBounds(30, 170, 200, 25);
-        add(fechaLabel);
+        addFormField(panel, "Cédula:", cedulaField = new JTextField(), y++);
+        addFormField(panel, "Nombres:", nombresField = new JTextField(), y++);
+        addFormField(panel, "Apellidos:", apellidosField = new JTextField(), y++);
+
+        panel.add(new JLabel("Fecha Nacimiento:"), createGbc(0, y));
         fechaNacimientoChooser = new JDateChooser();
-        fechaNacimientoChooser.setBounds(250, 170, 200, 25);
         fechaNacimientoChooser.setDateFormatString("dd/MM/yyyy");
-        add(fechaNacimientoChooser);
+        panel.add(fechaNacimientoChooser, createGbc(1, y++));
+        
+        addFormField(panel, "Sexo:", sexoComboBox = new JComboBox<>(new String[]{"Masculino", "Femenino", "Otro"}), y++);
+        addFormField(panel, "Correo:", correoField = new JTextField(), y++);
+        addFormField(panel, "Usuario:", usuarioPacienteField = new JTextField(), y++);
+        addFormField(panel, "Contraseña:", contrasenaField = new JPasswordField(), y++);
+        addFormField(panel, "Alergias:", alergiasField = new JTextField(), y++);
+        addFormField(panel, "Estado Civil:", estadoCivilComboBox = new JComboBox<>(new String[]{"Soltero", "Casado", "Divorciado", "Viudo"}), y++);
+        addFormField(panel, "Teléfono:", telefonoField = new JTextField(), y++);
+        addFormField(panel, "Tipo de Sangre:", sangreField = new JTextField(), y++);
+        addFormField(panel, "Tipo Identificador:", tipoIdentificadorField = new JTextField(), y++);
 
-        sexoComboBox = new JComboBox<>(new String[]{"Masculino", "Femenino", "Otro"});
-        addFormField("Sexo:", sexoComboBox, 210);
+        // Botones
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new FlowLayout());
 
-        addFormField("Correo:", correoField = new JTextField(), 250);
-        addFormField("Contraseña:", contrasenaField = new JPasswordField(), 290);
-
-// Botón Registrar con efecto hover azul (ESTILO EXACTO)
-JButton registrarBtn = new JButton("Registrar");
-registrarBtn.setBounds(150, 350, 120, 30); // Posición Y ajustada a 350 para el formulario de paciente
-registrarBtn.setForeground(Color.BLACK);
-registrarBtn.setFont(new Font("Arial", Font.BOLD, 12));
-registrarBtn.setBackground(new Color(70, 130, 180));
-registrarBtn.setOpaque(true);
-registrarBtn.setBorderPainted(false);
-registrarBtn.addMouseListener(new MouseAdapter() {
-    public void mouseEntered(MouseEvent evt) {
-        registrarBtn.setBackground(new Color(100, 150, 200));
-    }
-    public void mouseExited(MouseEvent evt) {
+        JButton registrarBtn = new JButton("Registrar");
+        registrarBtn.setForeground(Color.BLACK);
+        registrarBtn.setFont(new Font("Arial", Font.BOLD, 12));
         registrarBtn.setBackground(new Color(70, 130, 180));
-    }
-});
-registrarBtn.addActionListener(e -> registrarPaciente()); // Cambiado a registrarPaciente()
-add(registrarBtn);
+        registrarBtn.setOpaque(true);
+        registrarBtn.setBorderPainted(false);
+        registrarBtn.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) { registrarBtn.setBackground(new Color(100, 150, 200)); }
+            public void mouseExited(MouseEvent evt) { registrarBtn.setBackground(new Color(70, 130, 180)); }
+        });
+        registrarBtn.addActionListener(e -> registrarPaciente());
+        btnPanel.add(registrarBtn);
 
-// Botón Volver con efecto hover rojo (ESTILO EXACTO)
-JButton volverBtn = new JButton("← Volver");
-volverBtn.setBounds(300, 350, 120, 30); // Posición Y ajustada a 350
-volverBtn.setForeground(Color.BLACK);
-volverBtn.setFont(new Font("Arial", Font.BOLD, 12));
-volverBtn.setBackground(new Color(220, 60, 60));
-volverBtn.setOpaque(true);
-volverBtn.setBorderPainted(false);
-volverBtn.addMouseListener(new MouseAdapter() {
-    public void mouseEntered(MouseEvent evt) {
-        volverBtn.setBackground(new Color(240, 80, 80));
-    }
-    public void mouseExited(MouseEvent evt) {
+        JButton volverBtn = new JButton("← Volver");
+        volverBtn.setForeground(Color.BLACK);
+        volverBtn.setFont(new Font("Arial", Font.BOLD, 12));
         volverBtn.setBackground(new Color(220, 60, 60));
-    }
-});
-volverBtn.addActionListener(e -> {
-    new HomeWindow().setVisible(true);
-    dispose();
-});
-add(volverBtn);
+        volverBtn.setOpaque(true);
+        volverBtn.setBorderPainted(false);
+        volverBtn.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) { volverBtn.setBackground(new Color(240, 80, 80)); }
+            public void mouseExited(MouseEvent evt) { volverBtn.setBackground(new Color(220, 60, 60)); }
+        });
+        volverBtn.addActionListener(e -> {
+            new HomeWindow().setVisible(true);
+            dispose();
+        });
+        btnPanel.add(volverBtn);
 
-// Botón Autocompletar para pruebas (ESTILO EXACTO)
-JButton autocompletarBtn = new JButton("Autocompletar");
-autocompletarBtn.setBounds(430, 350, 120, 30); // Posición Y ajustada a 350
-autocompletarBtn.setForeground(Color.BLACK);
-autocompletarBtn.setFont(new Font("Arial", Font.BOLD, 12));
-autocompletarBtn.setBackground(new Color(100, 180, 100));
-autocompletarBtn.setOpaque(true);
-autocompletarBtn.setBorderPainted(false);
-autocompletarBtn.addMouseListener(new MouseAdapter() {
-    public void mouseEntered(MouseEvent evt) {
-        autocompletarBtn.setBackground(new Color(130, 200, 130));
-    }
-    public void mouseExited(MouseEvent evt) {
-        autocompletarBtn.setBackground(new Color(100, 180, 100));
-    }
-});
-autocompletarBtn.addActionListener(e -> {
-    // Autocompletado modificado para paciente (sin roleComboBox y usuarioField)
-    cedulaField.setText("1234567890");
-    nombresField.setText("Juan");
-    apellidosField.setText("Pérez");
-    fechaNacimientoChooser.setDate(new Date());
-    sexoComboBox.setSelectedItem("Masculino");
-    correoField.setText("juan.perez@example.com");
-    contrasenaField.setText("clave123");
-});
-add(autocompletarBtn);
+        gbc.gridx = 0;
+        gbc.gridy = y++;
+        gbc.gridwidth = 2;
+        panel.add(btnPanel, gbc);
 
-aplicarRestricciones();
+        // ScrollPane
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        add(scrollPane);
+
+        aplicarRestricciones();
     }
 
-    private void addFormField(String labelText, JComponent field, int y) {
-        JLabel label = new JLabel(labelText);
-        label.setBounds(30, y, 200, 25);
-        add(label);
-        field.setBounds(250, y, 200, 25);
-        add(field);
+    private void addFormField(JPanel panel, String label, JComponent field, int y) {
+        panel.add(new JLabel(label), createGbc(0, y));
+        panel.add(field, createGbc(1, y));
+    }
+
+    private GridBagConstraints createGbc(int x, int y) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = (x == 0) ? 0.3 : 0.7;
+        return gbc;
     }
 
     private void aplicarRestricciones() {
         cedulaField.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
-                if (!Character.isDigit(c) || cedulaField.getText().length() >= 10) {
-                    e.consume();
-                }
+                if (!Character.isDigit(c) || cedulaField.getText().length() >= 10) e.consume();
             }
         });
 
         KeyAdapter soloLetras = new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
-                if (!Character.isLetter(c) && !Character.isWhitespace(c)) {
-                    e.consume();
-                }
+                if (!Character.isLetter(c) && !Character.isWhitespace(c)) e.consume();
             }
         };
-
         nombresField.addKeyListener(soloLetras);
         apellidosField.addKeyListener(soloLetras);
     }
 
     private void registrarPaciente() {
-            try {
-            // Validación de cédula
+        try {
             String cedula = cedulaField.getText().trim();
-            if (!CedulaEcuatoriana.validar(cedula)) {
-                throw new IllegalArgumentException("La cédula no es válida para Ecuador");
-            }
+            if (!CedulaEcuatoriana.validar(cedula))
+                throw new IllegalArgumentException("Cédula inválida");
 
-            // Validación de nombres
             String nombres = nombresField.getText().trim();
-            if (!Validaciones.validarNombresCompletos(nombres)) {
+            if (!Validaciones.validarNombresCompletos(nombres))
                 throw new IllegalArgumentException("Debe ingresar al menos dos nombres");
-            }
 
-            // Validación de apellidos
             String apellidos = apellidosField.getText().trim();
-            if (!Validaciones.validarCampoObligatorio(apellidos)) {
-                throw new IllegalArgumentException("Los apellidos son obligatorios");
-            }
+            if (!Validaciones.validarCampoObligatorio(apellidos))
+                throw new IllegalArgumentException("Apellidos obligatorios");
 
-            // Validación de fecha de nacimiento
             Date fechaNacimiento = fechaNacimientoChooser.getDate();
-            if (!Validaciones.validarFechaNacimiento(fechaNacimiento)) {
+            if (!Validaciones.validarFechaNacimiento(fechaNacimiento))
                 throw new IllegalArgumentException("Fecha de nacimiento inválida");
-            }
 
-            // Validación de correo
             String correo = correoField.getText().trim();
-            if (!Validaciones.validarEmail(correo)) {
-                throw new IllegalArgumentException("Formato de correo electrónico inválido");
-            }
+            if (!Validaciones.validarEmail(correo))
+                throw new IllegalArgumentException("Email inválido");
 
-            // Validación de contraseña
             String contrasena = new String(contrasenaField.getPassword());
-            if (!Validaciones.validarContrasena(contrasena)) {
-                throw new IllegalArgumentException("La contraseña debe tener al menos 6 caracteres");
-            }
+            if (!Validaciones.validarContrasena(contrasena))
+                throw new IllegalArgumentException("Contraseña mínima de 6 caracteres");
 
-            // Verificar si el usuario ya existe
+            String alergias = alergiasField.getText().trim();
+            String sexo = sexoComboBox.getSelectedItem().toString();
+            String estadoCivil = estadoCivilComboBox.getSelectedItem().toString();
+            String telefono = telefonoField.getText().trim();
+            String tipoSangre = sangreField.getText().trim();
+            String tipoIdentificador = tipoIdentificadorField.getText().trim();
+
+            // Aquí si tienes usuarioPacienteField, no lo usas para crear Paciente, 
+            // pues el usuario está definido en la clase Usuario (cedula o correo es identificador)
+
             PacienteDAO pacienteDAO = new PacienteDAO();
-            if (pacienteDAO.existe(cedula)) {
-                throw new IllegalArgumentException("La cédula ya está registrada");
-            }
+            if (pacienteDAO.existe(cedula))
+                throw new IllegalArgumentException("La cédula ya existe");
 
-            // Crear y guardar el paciente
+            // Creas el paciente con todos los campos (idAntecedentes lo dejas null si no hay)
             Paciente nuevoPaciente = new Paciente(
-                cedula, nombres, apellidos, fechaNacimiento,
-                sexoComboBox.getSelectedItem().toString(),
-                correo, contrasena, "paciente",
-                null, null, null
-            );
+                    cedula, nombres, apellidos, fechaNacimiento,
+                    sexo, correo, contrasena, "PACIENTE",
+                    alergias, null,  // idAntecedentes null por ahora
+                    estadoCivil, telefono, tipoSangre, tipoIdentificador);
 
             if (pacienteDAO.guardar(nuevoPaciente)) {
                 JOptionPane.showMessageDialog(this, "Paciente registrado exitosamente");
@@ -214,5 +201,11 @@ aplicarRestricciones();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al registrar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+
+    private int calcularEdad(Date fechaNacimiento) {
+        LocalDate nacimiento = fechaNacimiento.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return Period.between(nacimiento, LocalDate.now()).getYears();
     }
 }
