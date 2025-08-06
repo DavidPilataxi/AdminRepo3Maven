@@ -4,11 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import medicosmodule.vistas.Principal;
 
+
 public class AdminWindow extends JFrame {
 
     public AdminWindow() {
         setTitle("Panel del Administrador");
-        setSize(600, 400);
+        setSize(600, 500); // Ajustado para que entren más botones
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -21,15 +22,17 @@ public class AdminWindow extends JFrame {
 
         // Panel central con botones
         JPanel panelBotones = new JPanel();
-        panelBotones.setLayout(new GridLayout(3, 1, 10, 10)); // Solo 3 botones ahora
+        panelBotones.setLayout(new GridLayout(4, 1, 10, 10)); // 4 botones ahora
         panelBotones.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
         JButton btnModuloAdministradores = new JButton("Módulo de Administradores");
         JButton btnModuloMedicos = new JButton("Módulo Médicos y Especialidades");
+        JButton btnModuloBodega = new JButton("Módulo Bodega");
         JButton btnCerrarSesion = new JButton("Cerrar Sesión");
 
         panelBotones.add(btnModuloAdministradores);
         panelBotones.add(btnModuloMedicos);
+        panelBotones.add(btnModuloBodega); // Botón agregado
         panelBotones.add(btnCerrarSesion);
 
         add(panelBotones, BorderLayout.CENTER);
@@ -37,16 +40,22 @@ public class AdminWindow extends JFrame {
         // Acción para abrir login de administrador
         btnModuloAdministradores.addActionListener(e -> {
             new LoginAdminWindow().setVisible(true);
-            // dispose(); // si quieres cerrar esta ventana al abrir el login
+            // dispose();
         });
 
         // Acción para abrir módulo médico
         btnModuloMedicos.addActionListener(e -> {
-    new LoginAdminMedicoWindow().setVisible(true);
-    // Opcional: cerrar esta ventana si quieres
-    // dispose();
-});
+            new LoginAdminMedicoWindow().setVisible(true);
+            // dispose();
+        });
 
+        // Acción para abrir módulo bodega
+        btnModuloBodega.addActionListener(e -> {
+            BodegaLoginWindow loginWindow = new BodegaLoginWindow();
+            loginWindow.setLocationRelativeTo(this);
+            loginWindow.setVisible(true);
+            dispose();
+        });
 
         // Acción para cerrar sesión
         btnCerrarSesion.addActionListener(e -> {

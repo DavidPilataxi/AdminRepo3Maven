@@ -1,6 +1,5 @@
 package citasmodule.Vistas;
 
-import citasmodule.Vistas.DiagnosticoTratamiento;
 import citasmodule.conexion.ConexionBD;
 import static java.lang.Integer.parseInt;
 import java.sql.Connection;
@@ -71,6 +70,10 @@ public class AgendarCita extends javax.swing.JFrame {
         cmbMedico = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         txtNombrePaciente = new javax.swing.JTextField();
+        jButtonBuscarPac = new javax.swing.JButton();
+        jButtonRegistrarPac = new javax.swing.JButton();
+        txtApellidoPaciente = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -87,6 +90,8 @@ public class AgendarCita extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Agendamiento de citas Medicas");
+
+        jPanel1.setBackground(new java.awt.Color(102, 204, 255));
 
         jLabel1.setText("Cédula del Paciente:");
 
@@ -159,38 +164,58 @@ public class AgendarCita extends javax.swing.JFrame {
 
         jLabel5.setText("Nombre del Paciente:");
 
+        jButtonBuscarPac.setText("Buscar Paciente");
+        jButtonBuscarPac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarPacActionPerformed(evt);
+            }
+        });
+
+        jButtonRegistrarPac.setText("Registrar Paciente");
+        jButtonRegistrarPac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRegistrarPacActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Apellido del Paciente:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton_BuscarHorarios)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtCedulaPaciente)
-                                    .addComponent(cmbEspecialidad, 0, 212, Short.MAX_VALUE)
-                                    .addComponent(cmbMedico, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtNombrePaciente))))
-                        .addGap(37, 37, 37))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(204, 204, 204)
                 .addComponent(jButton_AgendarCita)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jButton_BuscarHorarios)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(57, 57, 57)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtApellidoPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtCedulaPaciente)
+                                .addComponent(cmbEspecialidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cmbMedico, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtNombrePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonBuscarPac, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonRegistrarPac, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,11 +224,18 @@ public class AgendarCita extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCedulaPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonBuscarPac)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtNombrePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
+                    .addComponent(txtNombrePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonRegistrarPac))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtApellidoPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -215,9 +247,9 @@ public class AgendarCita extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(38, 38, 38)
                 .addComponent(jButton_BuscarHorarios)
-                .addGap(40, 40, 40)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton_AgendarCita)
@@ -251,8 +283,10 @@ public class AgendarCita extends javax.swing.JFrame {
 
     private void cmbEspecialidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEspecialidadActionPerformed
         String especialidadSeleccionada = (String) cmbEspecialidad.getSelectedItem();
-        if (especialidadSeleccionada != null) {
+        if (especialidadSeleccionada != null && !especialidadSeleccionada.equals("Especialidad")) {
             cargarMedicosPorEspecialidad(especialidadSeleccionada);
+        }else {
+            cmbMedico.setModel(new DefaultComboBoxModel<>());
         }
     }//GEN-LAST:event_cmbEspecialidadActionPerformed
 
@@ -260,20 +294,14 @@ public class AgendarCita extends javax.swing.JFrame {
         // TODO add your handling code here:
         String cedula = txtCedulaPaciente.getText().trim();
         String nombre = txtNombrePaciente.getText().trim();
+        String apellido = txtApellidoPaciente.getText().trim();
         String medico = (String) cmbMedico.getSelectedItem();
         String especialidad = (String) cmbEspecialidad.getSelectedItem();
         Date fechaSelec = dateChooser.getDate();
 
         // Validaciones básicas
-        if (cedula.isEmpty() || nombre.isEmpty() || medico == null || especialidad == null || fechaSelec == null) {
-            JOptionPane.showMessageDialog(this, "Por favor complete todos los campos: cédula, nombre, especialidad, médico y fecha.");
-            return;
-        }
-        
-        // Validaciones adicionales para médico y especialidad
-        if ("Seleccione una especialidad".equals(especialidad) || "Seleccione un médico".equals(medico) ||
-            "No hay médicos disponibles".equals(medico)) {
-            JOptionPane.showMessageDialog(this, "Por favor seleccione una especialidad y un médico válidos.");
+        if (cedula.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || medico == null || especialidad == null || fechaSelec == null) {
+            JOptionPane.showMessageDialog(this, "Por favor complete todos los campos: cédula, nombre, apellido, especialidad, médico y fecha.");
             return;
         }
 
@@ -298,6 +326,7 @@ public class AgendarCita extends javax.swing.JFrame {
                 "¿Desea agendar esta cita?\n\n" +
                         "Cédula: " + cedula +
                         "\nNombre: " + nombre +
+                        "\nApellido: " + apellido +
                         "\nEspecialidad: " + especialidad +
                         "\nMédico: " + medico +
                         "\nFecha: " + fechaEnString +
@@ -322,49 +351,62 @@ public class AgendarCita extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbMedicoActionPerformed
 
+    private void jButtonBuscarPacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarPacActionPerformed
+        // TODO add your handling code here:
+        String cedula = txtCedulaPaciente.getText().trim();
+        if (!cedula.isEmpty()) {
+            buscarPacientePorCedula(cedula);
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingrese una cédula.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonBuscarPacActionPerformed
+
+    private void jButtonRegistrarPacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistrarPacActionPerformed
+        // TODO add your handling code here:
+        String cedula = txtCedulaPaciente.getText().trim();
+        String nombre = txtNombrePaciente.getText().trim();
+        String apellido = txtApellidoPaciente.getText().trim();
+        
+        if (!cedula.isEmpty() || !nombre.isEmpty() || !apellido.isEmpty()) {
+            try {
+                registrarPaciente(cedula, nombre, apellido);
+            } catch (SQLException ex) {
+                Logger.getLogger(AgendarCita.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Complete todos los campos.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonRegistrarPacActionPerformed
+
       
     private void cargarMedicosPorEspecialidad(String especialidad) {
         ConexionBD conexion = new ConexionBD();
         Connection conn = conexion.establecerConexion();
 
-        try {
-            // Verificamos primero si hay médicos con esa especialidad
-            String sqlCount = "SELECT COUNT(*) AS total FROM Medicos M JOIN Especialidades E ON M.IdEspecialidad = E.IdEspecialidad WHERE E.Nombre = ?";
-            PreparedStatement pstmtCount = conn.prepareStatement(sqlCount);
-            pstmtCount.setString(1, especialidad);
-            ResultSet rsCount = pstmtCount.executeQuery();
-            int total = 0;
-            if (rsCount.next()) {
-                total = rsCount.getInt("total");
-            }
-            
-            if (total == 0) {
-                // Limpiamos el combo de médicos si no hay médicos con esa especialidad
-                DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-                model.addElement("No hay médicos disponibles");
-                cmbMedico.setModel(model);
-                return;
-            }
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this, "Error de conexión a la base de datos",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-            String sql = "SELECT CONCAT(M.Nombre, ' ', M.Apellido) AS nombreCompleto FROM Medicos M JOIN Especialidades E ON M.IdEspecialidad = E.IdEspecialidad WHERE E.Nombre = ?";
+        try {
+            String sql = "SELECT CONCAT(nombres, ' ', apellidos) AS nombre_medico " +
+             "FROM [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Doctor] " +
+             "WHERE id_especialidad = (" +
+             "   SELECT id_especialidad FROM [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Especialidades] " +
+             "   WHERE nombre = ?" +
+             ")";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, especialidad);
             ResultSet rs = pstmt.executeQuery();
 
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             model.addElement("Seleccione un médico");
+
             while (rs.next()) {
-                String nombre = rs.getString("nombreCompleto");
-                if (nombre != null && !nombre.trim().isEmpty()) {
-                    model.addElement(nombre);
-                }
+                model.addElement(rs.getString("nombre_medico"));
             }
             cmbMedico.setModel(model);
-
-            // Si solo tiene la opción por defecto, mostramos mensaje
-            if (model.getSize() <= 1) {
-                JOptionPane.showMessageDialog(this, "No hay médicos disponibles para esta especialidad.", "Información", JOptionPane.INFORMATION_MESSAGE);
-            }
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar médicos: " + ex.getMessage(), "Error de BD", JOptionPane.ERROR_MESSAGE);
@@ -377,45 +419,33 @@ public class AgendarCita extends javax.swing.JFrame {
     private void cargarEspecialidadesDisponibles() {
         ConexionBD conexion = new ConexionBD();
         Connection conn = conexion.establecerConexion();
+
         if (conn == null) {
-            JOptionPane.showMessageDialog(this, "No se pudo establecer conexión con la base de datos.", "Error de Conexión", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error de conexión a la base de datos",
+                    "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         try {
-            // Primero verificamos si hay datos en la tabla Medicos
-            String sqlCount = "SELECT COUNT(*) AS total FROM Medicos";
-            PreparedStatement pstmtCount = conn.prepareStatement(sqlCount);
-            ResultSet rsCount = pstmtCount.executeQuery();
-            if (rsCount.next()) {
-                int total = rsCount.getInt("total");
-                System.out.println("Total de registros en tabla Medicos: " + total);
-                if (total == 0) {
-                    JOptionPane.showMessageDialog(this, "No hay médicos registrados en la base de datos.", "Información", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-            
-            String sql = "SELECT DISTINCT E.Nombre AS especialidad FROM Medicos M JOIN Especialidades E ON M.IdEspecialidad = E.IdEspecialidad";
+            String sql = "SELECT Nombre AS Especialidad FROM [" 
+                       + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Especialidades]";
+
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            model.addElement("Seleccione una especialidad"); // Opción por defecto
+            model.addElement("Especialidad"); // Opción por defecto
+
             while (rs.next()) {
-                String especialidad = rs.getString("especialidad");
-                if (especialidad != null && !especialidad.trim().isEmpty()) {
-                    model.addElement(especialidad);
-                }
-            }
-            cmbEspecialidad.setModel(model);
-            
-            // Si no hay especialidades, mostramos un mensaje
-            if (model.getSize() <= 1) { // Solo tiene la opción por defecto
-                JOptionPane.showMessageDialog(this, "No hay especialidades disponibles. Registre médicos con especialidades.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                model.addElement(rs.getString("Especialidad")); // Ahora sí coincide con el alias
             }
 
+            cmbEspecialidad.setModel(model);
+            cmbEspecialidad.setSelectedIndex(0);
+
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al cargar especialidades: " + ex.getMessage(), "Error de BD", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error al cargar especialidades: " + ex.getMessage(),
+                    "Error de BD", JOptionPane.ERROR_MESSAGE);
             logger.log(Level.SEVERE, "Error al cargar especialidades", ex);
         } finally {
             conexion.cerrarConexion(conn);
@@ -428,30 +458,14 @@ public class AgendarCita extends javax.swing.JFrame {
         Connection conn = conexion.establecerConexion();
 
         try {
-            // Verificamos primero si el médico existe
-            String sqlCount = "SELECT COUNT(*) AS total FROM Medicos WHERE CONCAT(Nombre, ' ', Apellido) = ?";
-            PreparedStatement pstmtCount = conn.prepareStatement(sqlCount);
-            pstmtCount.setString(1, nombreMedico);
-            ResultSet rsCount = pstmtCount.executeQuery();
-            int total = 0;
-            if (rsCount.next()) {
-                total = rsCount.getInt("total");
-            }
-            
-            if (total == 0) {
-                JOptionPane.showMessageDialog(this, "No se encontró el médico especificado en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
-                return null;
-            }
-
-            String sql = "SELECT Cedula FROM Medicos WHERE CONCAT(Nombre, ' ', Apellido) = ?";
+            String sql = "SELECT cedula FROM [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Doctor] WHERE "
+                    + "CONCAT(nombres, ' ', apellidos) = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, nombreMedico);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                cedula = rs.getString("Cedula");
-            } else {
-                JOptionPane.showMessageDialog(this, "No se encontró la cédula del médico especificado.", "Error", JOptionPane.ERROR_MESSAGE);
+                cedula = rs.getString("cedula");
             }
 
         } catch (SQLException ex) {
@@ -460,6 +474,7 @@ public class AgendarCita extends javax.swing.JFrame {
         } finally {
             conexion.cerrarConexion(conn);
         }
+        
 
         return cedula;
     }
@@ -469,25 +484,15 @@ public class AgendarCita extends javax.swing.JFrame {
         Connection conn = conexion.establecerConexion();
 
         String medico = (String) cmbMedico.getSelectedItem();
-        
-        // Validaciones iniciales
-        if (medico == null || "Seleccione un médico".equals(medico) || "No hay médicos disponibles".equals(medico)) {
-            JOptionPane.showMessageDialog(this, 
-                "Por favor seleccione un médico válido.", 
-                "Error de Selección", 
-                JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
         String cedulaMedico = obtenerCedulaPorNombreMedico(medico);
         // id_doctor es nchar en la BD, no int
         String id_doctor = cedulaMedico;
         java.util.Date fecha = dateChooser.getDate();
 
         // Validaciones iniciales
-        if (fecha == null) {
+        if (fecha == null || medico == null || medico.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
-                "Por favor seleccione una fecha válida.", 
+                "Por favor seleccione un médico y una fecha válidos.", 
                 "Error de Selección", 
                 JOptionPane.WARNING_MESSAGE);
             return;
@@ -495,7 +500,7 @@ public class AgendarCita extends javax.swing.JFrame {
 
         if (id_doctor == null || id_doctor.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
-                "No se encontró el ID del médico. Por favor verifique que el médico esté correctamente registrado.", 
+                "No se encontró el ID del médico.", 
                 "Error", 
                 JOptionPane.ERROR_MESSAGE);
             return;
@@ -517,7 +522,7 @@ public class AgendarCita extends javax.swing.JFrame {
 
         // Consultar horarios ocupados desde la base de datos
         Set<String> horasOcupadas = new HashSet<>();
-        String consulta = "SELECT hora FROM Cita WHERE id_doctor = ? AND fecha = ?";
+        String consulta = "SELECT hora FROM [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Cita] WHERE id_doctor = ? AND fecha = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(consulta)) {
             stmt.setString(1, id_doctor); // Cambio a setString para nchar
@@ -585,6 +590,110 @@ public class AgendarCita extends javax.swing.JFrame {
            return null;
        }
     }
+   
+    private void buscarPacientePorCedula(String cedula) {
+        ConexionBD conexion = new ConexionBD();
+        Connection conn = conexion.establecerConexion();
+
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            String sql = "SELECT nombres, apellidos FROM [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Paciente] WHERE cedula = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, cedula);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String nombre = rs.getString("nombres");
+                String apellido = rs.getString("apellidos");
+
+                txtNombrePaciente.setText(nombre);
+                txtApellidoPaciente.setText(apellido);
+            } else {
+                JOptionPane.showMessageDialog(this, "Paciente no encontrado. Regístrese primero para agendar.", "Paciente no encontrado", JOptionPane.WARNING_MESSAGE);
+                txtNombrePaciente.setText("");
+                txtApellidoPaciente.setText("");
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al buscar paciente: " + ex.getMessage(), "Error de BD", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        } finally {
+            conexion.cerrarConexion(conn);
+        }
+    }
+
+    
+    private void registrarPaciente(String cedula, String nombre, String apellido) throws SQLException {
+        
+        // Validación de cédula
+        if (!validarCedula(cedula)) {
+            JOptionPane.showMessageDialog(this, "Cédula inválida. Debe tener 10 digitos y ser ecuatoriana.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        ConexionBD conexion = new ConexionBD();
+        Connection conn = conexion.establecerConexion();
+        
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int idAntecedente = generarNuevoIdAntecedentes(conn);
+
+        try {
+            conn.setAutoCommit(false); // Inicia transacción
+            Statement st = conn.createStatement();
+            st.execute("SET XACT_ABORT ON;");
+
+            // Paso 1: Insertar en Antecedentes
+            String sqlAntecedente = "INSERT INTO [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Antecedentes] (familiares, patologicos, fisiologicos, enfermedades_actuales) VALUES ('Ninguno', 'Ninguno', 'Ninguno', 'Ninguna')";
+            PreparedStatement psAntecedente = conn.prepareStatement(sqlAntecedente, Statement.RETURN_GENERATED_KEYS);
+            psAntecedente.executeUpdate();
+            ResultSet rsAntecedente = psAntecedente.getGeneratedKeys();
+
+            
+//            if (rsAntecedente.next()) {
+//                idAntecedente = rsAntecedente.getInt(1);
+//            } else {
+//                throw new SQLException("No se pudo obtener el ID de antecedentes.");
+//            }
+
+            // Paso 3: Insertar en Paciente
+            String sqlPaciente = "INSERT INTO [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Paciente] (cedula, nombres, apellidos, id_antecedetes) VALUES (?, ?, ?, ?)";
+            PreparedStatement psPaciente = conn.prepareStatement(sqlPaciente);
+            psPaciente.setString(1, cedula);
+            psPaciente.setString(2, nombre);
+            psPaciente.setString(3, apellido);
+            psPaciente.setInt(4, idAntecedente);
+            psPaciente.executeUpdate();
+
+            // Confirmar todo
+            conn.commit();
+            JOptionPane.showMessageDialog(this, "Paciente registrado exitosamente.");
+
+        } catch (SQLException ex) {
+            try {
+                conn.rollback(); // Revertir si algo falla
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+            JOptionPane.showMessageDialog(this, "Error al registrar paciente: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            conexion.cerrarConexion(conn);
+        }
+    }
+
     
     public boolean validarCedula(String cedula) {
         // 1. Verifica longitud y solo números
@@ -626,114 +735,128 @@ public class AgendarCita extends javax.swing.JFrame {
         return digitoVerificadorCalculado == digitoVerificadorReal;
     }
     
-    private void agendarCita(String cedula) throws SQLException{
+    private void agendarCita(String cedula) throws SQLException {
         ConexionBD conexion = new ConexionBD();
         Connection conn = conexion.establecerConexion();
-        int id_Cita = generarNuevoIdCita(conn);
-        int id_paciente = Integer.parseInt(cedula);
-        Date fechaSelec = dateChooser.getDate(); // java.util.Date
-        Date fecha = new java.sql.Date(fechaSelec.getTime());
-        String motivo= "";
-        int id_tipo = 1;
-        
-        String nombreSeleccionado = (String) cmbMedico.getSelectedItem();
-        String cedulaMedico = obtenerCedulaPorNombreMedico(nombreSeleccionado);
-        int id_doctor = parseInt(cedulaMedico);
 
-        // Obtener un id_tipo válido desde la tabla Tipo
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT TOP 1 id_tipo FROM Tipo")) {
-            if (rs.next()) {
-                id_tipo = rs.getInt("id_tipo");
-            } else {
-                JOptionPane.showMessageDialog(this, "No se encontró un tipo válido para la cita.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al obtener tipo de cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Sincronizar médico en tabla Doctor para evitar error FK
-        sincronizarMedicoEnDoctor(conn, cedulaMedico, nombreSeleccionado);
-        
-        int selectedRow = tablaHorarios.getSelectedRow();
-        String hora = (String) tablaHorarios.getValueAt(selectedRow, 0);
-
-        // Usamos un DateFormat para parsear el texto
-        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
-        java.util.Date horaDate = null;
-        try {
-            horaDate = formatoHora.parse(hora);
-        } catch (ParseException ex) {
-            Logger.getLogger(AgendarCita.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        // Convertimos a java.sql.Time
-        java.sql.Time horaSQL = new java.sql.Time(horaDate.getTime());
-
-        
         if (conn == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
             return;
         }
-        
-        String sqlCita = "INSERT INTO CITA(id_cita, id_paciente, hora, "
-                + "fecha, motivo, id_doctor, id_tipo) VALUES (?,?,?,?,?,?,?)";
-        
-        try (PreparedStatement pstmtCita = conn.prepareStatement(sqlCita)) {
-            pstmtCita.setInt(1, id_Cita);
-            pstmtCita.setInt(2, id_paciente);
-            pstmtCita.setTime(3, horaSQL);
-            pstmtCita.setDate(4, (java.sql.Date) fecha);
-            pstmtCita.setString(5, motivo);
-            pstmtCita.setInt(6, id_doctor);
-            pstmtCita.setInt(7, id_tipo);
-            
-            if (pstmtCita.executeUpdate() == 0) {
-                throw new SQLException("No se pudo insertar la cita");
-            }
-        }
-    }
 
-    private void sincronizarMedicoEnDoctor(Connection conn, String cedulaMedico, String nombreCompleto) {
         try {
-            // Verificar si el médico ya existe en la tabla Doctor
-            PreparedStatement psCheck = conn.prepareStatement("SELECT COUNT(*) FROM Doctor WHERE cedula = ?");
-            psCheck.setString(1, cedulaMedico);
-            ResultSet rs = psCheck.executeQuery();
-            rs.next();
-            boolean existe = rs.getInt(1) > 0;
+            conn.setAutoCommit(false); // Inicia transacción
+            Statement st = conn.createStatement();
+            st.execute("SET XACT_ABORT ON;");
 
-            if (!existe) {
-                // Insertar médico en tabla Doctor con datos mínimos para evitar error FK
-                String[] nombresApellidos = nombreCompleto.split(" ", 2);
-                String nombre = nombresApellidos.length > 0 ? nombresApellidos[0] : "";
-                String apellido = nombresApellidos.length > 1 ? nombresApellidos[1] : "";
-                PreparedStatement psInsert = conn.prepareStatement(
-                    "INSERT INTO Doctor (cedula, nombres, apellidos, fecha_nacimiento, sexo, correo, contrasena_doctor, rol, especialidad) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                psInsert.setString(1, cedulaMedico);
-                psInsert.setString(2, nombre);
-                psInsert.setString(3, apellido);
-                psInsert.setDate(4, new java.sql.Date(System.currentTimeMillis())); // Fecha por defecto
-                psInsert.setString(5, "N/A"); // Sexo por defecto (valor corto para evitar truncamiento)
-                psInsert.setString(6, ""); // Correo vacío
-                psInsert.setString(7, "123456"); // Contraseña por defecto
-                psInsert.setString(8, "doctor");
-                psInsert.setString(9, "General"); // Especialidad por defecto
-                psInsert.executeUpdate();
+            int id_Cita = generarNuevoIdCita(conn);
+            int id_paciente = Integer.parseInt(cedula);
+            int id_anamnesis = generarNuevoIdAnam(conn);
+
+            Date fechaSelec = dateChooser.getDate();
+            Date fecha = new java.sql.Date(fechaSelec.getTime());
+
+            int selectedRow = tablaHorarios.getSelectedRow();
+            String hora = (String) tablaHorarios.getValueAt(selectedRow, 0);
+            SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
+            java.util.Date horaDate = formatoHora.parse(hora);
+            java.sql.Time horaSQL = new java.sql.Time(horaDate.getTime());
+
+            String medico = (String) cmbMedico.getSelectedItem();
+            String cedulaMedico = obtenerCedulaPorNombreMedico(medico);
+
+            String motivo = "";
+            int id_tipo = 1;
+
+            // Paso 1: Insertar en Anamnesis (deja que SQL Server genere el ID)
+            String sqlAnamnesis = "INSERT INTO [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Anamnesis] "
+                    + " (parametro, valor) VALUES (?, ?)";
+            
+            try (PreparedStatement psAnamnesis = conn.prepareStatement(sqlAnamnesis, Statement.RETURN_GENERATED_KEYS)) {
+                psAnamnesis.setString(1, "");
+                psAnamnesis.setString(2, "");
+                psAnamnesis.executeUpdate();
+
+//                try (ResultSet rs = psAnamnesis.getGeneratedKeys()) {
+//                    if (rs.next()) {
+//                        id_anamnesis = rs.getInt(1);  // ← Este es el valor generado
+//                    } else {
+//                        throw new SQLException("No se pudo obtener el ID de anamnesis.");
+//                    }
+//                }
             }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al sincronizar médico en tabla Doctor: " + ex.getMessage());
+
+            // Paso 2: Insertar en Cita con el ID de anamnesis generado
+            String sqlCita = "INSERT INTO [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Cita] "
+                    + "(id_cita, id_paciente, hora, fecha, motivo, id_doctor, id_tipo, id_anamnesis) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+            try (PreparedStatement pstmtCita = conn.prepareStatement(sqlCita)) {
+                pstmtCita.setInt(1, id_Cita);
+                pstmtCita.setInt(2, id_paciente);
+                pstmtCita.setTime(3, horaSQL);
+                pstmtCita.setDate(4, (java.sql.Date) fecha);
+                pstmtCita.setString(5, motivo);
+                pstmtCita.setString(6, cedulaMedico);
+                pstmtCita.setInt(7, id_tipo);
+                pstmtCita.setInt(8, id_anamnesis);
+
+                if (pstmtCita.executeUpdate() == 0) {
+                    throw new SQLException("No se pudo insertar la cita");
+                }
+            }
+
+            conn.commit();
+            JOptionPane.showMessageDialog(this, "Cita agendada exitosamente.");
+
+        } catch (Exception ex) {
+            if (conn != null) {
+                conn.rollback();
+            }
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al agendar cita: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            if (conn != null) {
+                conn.setAutoCommit(true);
+                conexion.cerrarConexion(conn);
+            }
         }
     }
+
+
+
     
     private int generarNuevoIdCita(Connection conn) throws SQLException {
-        String sql = "SELECT MAX(ID_CITA) FROM CITA";
+        ConexionBD conexion = new ConexionBD();
+        String sql = "SELECT MAX(id_cita) FROM [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Cita]";
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
                 return rs.getInt(1) + 1;
+            }
+            return 1; // Si no hay citas, empezar con 1
+        }
+    }
+    
+    private int generarNuevoIdAnam(Connection conn) throws SQLException {
+        ConexionBD conexion = new ConexionBD();
+        String sql = "SELECT MAX(id_anamnesis) FROM [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Anamnesis]";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 1; // Si no hay citas, empezar con 1
+        }
+    }
+    
+    private int generarNuevoIdAntecedentes(Connection conn) throws SQLException {
+        ConexionBD conexion = new ConexionBD();
+        String sql = "SELECT MAX(id_antecedentes) FROM [" + conexion.getLinkedServerName() + "].[polisalud].[dbo].[Antecedentes]";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt(1);
             }
             return 1; // Si no hay citas, empezar con 1
         }
@@ -780,6 +903,8 @@ public class AgendarCita extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmbEspecialidad;
     private javax.swing.JComboBox<String> cmbMedico;
     private com.toedter.calendar.JDateChooser dateChooser;
+    private javax.swing.JButton jButtonBuscarPac;
+    private javax.swing.JButton jButtonRegistrarPac;
     private javax.swing.JButton jButton_AgendarCita;
     private javax.swing.JButton jButton_BuscarHorarios;
     private javax.swing.JLabel jLabel1;
@@ -787,12 +912,14 @@ public class AgendarCita extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable tablaHorarios;
+    private javax.swing.JTextField txtApellidoPaciente;
     private javax.swing.JTextField txtCedulaPaciente;
     private javax.swing.JTextField txtNombrePaciente;
     // End of variables declaration//GEN-END:variables
